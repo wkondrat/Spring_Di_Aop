@@ -11,7 +11,7 @@ import pl.spring.demo.annotation.NullableId;
 import pl.spring.demo.common.Sequence;
 import pl.spring.demo.dao.BookDao;
 import pl.spring.demo.exception.BookNotNullIdException;
-import pl.spring.demo.to.BookTo;
+import pl.spring.demo.to.BookEntity;
 import pl.spring.demo.to.IdAware;
 
 @Aspect
@@ -21,12 +21,19 @@ public class BookDaoAdvisor {
 
 	@Before("@annotation(nullableId)")
 	public void before(JoinPoint joinPoint, NullableId nullableId) throws Throwable {	
-		BookTo bookTo = (BookTo)joinPoint.getArgs()[0];
+		checkNotNullId(joinPoint.getArgs()[0]);	
+	/*	BookTo bookTo = (BookTo)joinPoint.getArgs()[0];
 		BookDao book = (BookDao)joinPoint.getThis();
 		if (((IdAware) bookTo).getId() == null) {
 			bookTo.setId(sequence.nextValue(book.findAll()));
+		}*/
+		
+		BookEntity bookEntity = (BookEntity)joinPoint.getArgs()[0];
+		BookDao book = (BookDao)joinPoint.getThis();
+		if (((IdAware) bookEntity).getId() == null) {
+			bookEntity.setId(sequence.nextValue(book.findAll()));
 		}
-		checkNotNullId(joinPoint.getArgs()[0]);	
+		
 	}
 
 	private void checkNotNullId(Object o) {

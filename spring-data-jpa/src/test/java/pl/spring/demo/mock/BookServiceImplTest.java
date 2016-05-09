@@ -32,6 +32,6 @@ public class BookServiceImplTest {
         Mockito.when(bookDao.save(book)).thenReturn(new BookEntity(1L, "title", "author"));
         // when
         Mockito.verify(bookDao).save(book);
-        //assertEquals(1L, result.getId().longValue());
+        assertEquals(1L, bookDao.save(book).getId().longValue());
     }
 }

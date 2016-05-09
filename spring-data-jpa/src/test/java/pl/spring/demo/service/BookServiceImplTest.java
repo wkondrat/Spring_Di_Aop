@@ -8,7 +8,6 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import pl.spring.demo.dao.BookDao;
-import pl.spring.demo.dao.impl.BookDaoImpl;
 import pl.spring.demo.exception.BookNotNullIdException;
-import pl.spring.demo.to.BookEntity;
 import pl.spring.demo.to.BookTo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,11 +39,10 @@ public class BookServiceImplTest {
 		// then
 		assertNotNull(allBooks);
 		assertFalse(allBooks.isEmpty());
-		assertEquals(6, allBooks.size());
+		assertEquals(7, allBooks.size());
 	}
 
 	@Test
-	@Ignore
 	public void testShouldFindAllBooksByTitle() {
 		// given
 		final String title = "Opium w rosole";
@@ -69,18 +64,14 @@ public class BookServiceImplTest {
 		// then
 		fail("test should throw BookNotNullIdException");
 	}
-
+	
 	@Test
-	public void testShouldAddBook() {
+	public void testShouldReturnSixForBookId() {
+		// given
+		final BookTo bookToSave = new BookTo();
 		// when
-		BookDao bookDao = new BookDaoImpl();
-		final BookEntity bookToSave = new BookEntity(Long.valueOf(6), "Spring", "Wojtek");
-		bookDao.save(bookToSave);
-		List<BookTo> allBooks = bookService.findAllBooks();
 		// then
-		assertNotNull(allBooks);
-		assertFalse(allBooks.isEmpty());
-		assertEquals(Long.valueOf(6), bookService.findAllBooks().get(5).getId());
-	}
+		assertEquals(Long.valueOf(6), bookService.saveBook(bookToSave).getId());
 
+	}
 }
